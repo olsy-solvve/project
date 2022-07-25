@@ -1,60 +1,35 @@
-// mockup start
-const list = [
-    'Alex',
-    'Oleg',
-    'Olena'
-];
-// mockup end
+const $ul = document.querySelector('#people_list');
 
-
-const $ul = document.querySelector('ul#list');
-
-const removeItem = ($element) => {
-    $ul.removeChild($element);
-};
-
-const addItem = (item) => {
+const addPersonItem = (person) => {
+    // <li class="list-group-item"> Name </li>
+    // const secondFilm = person?.['films']?.[1] ?? 'Unknown';
+    const secondFilm = _.get(person, '["films"][1]', 'Unknown');
     const $li = document.createElement('li');
-    $li.innerText = item;
-    $li.addEventListener('click', (event) => {
-        // console.log(
-        //     event.target,
-        //     $li,
-        //     event.target === $li
-        // );
-        removeItem(event.target);
-    });
+    $li.className = 'list-group-item';
+
+    // name + '(birth year: ' + birthYear + ')';
+    $li.innerText = `
+        ${person['name']}
+        (birth year: ${person['birth_year']})
+        - second film: ${secondFilm}
+    `;
     $ul.appendChild($li);
 };
 
-const updateItem = () => {};
+// fetch('https://swapi.dev/api/people/?page=3')
+//     .then((response) => response.json()) // get json from response
+//     .then((json) => {
+//         json.results.forEach(person => {
+//             addPersonItem(person);
+//         });
+//     }); // get data
 
-list.forEach((el, index) => {
-    addItem(el);
-});
+// request.catch();
+// request.finally();
 
-// FORM PATH
-const $form = document.querySelector('form#user');
-const $input = $form.querySelector('input[name="user_name"]');
-
-$form.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const value = $input.value;
-    // check validation
-    if (value.length >= 2) {
-        addItem(value);
-        $input.value = '';
-    } else {
-
-        // homework
-    }
-});
-
-
-
-
-
-
-
-
-
+axios.get('https://swapi.dev/api/people/?page=3')
+    .then((res) => {
+        res.data.results.forEach(person => {
+            addPersonItem(person);
+        });
+    });
